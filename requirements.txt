@@ -1,0 +1,6 @@
+streamlit
+pandas
+Sastrawi
+PyPDF2
+scipy
+numpy
