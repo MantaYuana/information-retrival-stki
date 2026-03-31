@@ -4,9 +4,7 @@ import streamlit as st
 import text_processor as tp
 import tfidf_engine
 
-# ══════════════════════════════════════════════════════════════════════════════
 # Page Config & Global Styles
-# ══════════════════════════════════════════════════════════════════════════════
 st.set_page_config(
     page_title="TF-IDF Search Engine",
     page_icon="🔍",
@@ -19,13 +17,13 @@ st.markdown(
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-    /* ── Global Reset ─────────────────────────────────────────────── */
+    /*  Global Reset  */
     html, body, [class*="css"] {
         font-family: 'Inter', sans-serif;
     }
     .block-container { padding-top: 1rem; }
 
-    /* ── Header ───────────────────────────────────────────────────── */
+    /*  Header  */
     .main-header {
         background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
         padding: 2.2rem 2.8rem;
@@ -63,7 +61,7 @@ st.markdown(
         color: #c7d2fe;
     }
 
-    /* ── Stat Cards ───────────────────────────────────────────────── */
+    /*  Stat Cards  */
     .stat-card {
         background: linear-gradient(145deg, #1e1b4b 0%, #312e81 100%);
         padding: 1.3rem 1.5rem;
@@ -94,7 +92,7 @@ st.markdown(
         letter-spacing: 0.5px;
     }
 
-    /* ── Section Headers ──────────────────────────────────────────── */
+    /*  Section Headers  */
     .section-header {
         display: flex;
         align-items: center;
@@ -117,7 +115,7 @@ st.markdown(
         letter-spacing: 0.3px;
     }
 
-    /* ── Result Card ──────────────────────────────────────────────── */
+    /*  Result Card  */
     .result-card {
         background: linear-gradient(145deg, #1e1b4b 0%, #1e1b3a 100%);
         border-left: 4px solid;
@@ -157,7 +155,7 @@ st.markdown(
         line-height: 1.65;
     }
 
-    /* ── Highlight (stabilo effect) ───────────────────────────────── */
+    /*  Highlight (stabilo effect)  */
     .highlight-term {
         background: linear-gradient(135deg, rgba(250, 204, 21, 0.35), rgba(251, 191, 36, 0.25));
         color: #fef08a;
@@ -169,7 +167,7 @@ st.markdown(
         -webkit-box-decoration-break: clone;
     }
 
-    /* ── Summary Label ────────────────────────────────────────────── */
+    /*  Summary Label  */
     .search-summary {
         background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(52, 211, 153, 0.08));
         border: 1px solid rgba(16, 185, 129, 0.25);
@@ -181,7 +179,7 @@ st.markdown(
         font-size: 0.95rem;
     }
 
-    /* ── No Result ────────────────────────────────────────────────── */
+    /*  No Result  */
     .no-result {
         text-align: center;
         padding: 3rem 2rem;
@@ -197,7 +195,7 @@ st.markdown(
         display: block;
     }
 
-    /* ── Pagination ───────────────────────────────────────────────── */
+    /*  Pagination  */
     .pagination-info {
         text-align: center;
         color: #a5b4fc;
@@ -206,7 +204,7 @@ st.markdown(
         padding: 0.5rem;
     }
 
-    /* ── Sidebar tweaks ───────────────────────────────────────────── */
+    /*  Sidebar tweaks  */
     section[data-testid="stSidebar"] {
         background: linear-gradient(180deg, #0f0c29 0%, #1e1b4b 100%);
     }
@@ -215,7 +213,7 @@ st.markdown(
         color: #c7d2fe;
     }
 
-    /* ── Divider ──────────────────────────────────────────────────── */
+    /*  Divider  */
     .custom-divider {
         border: none;
         height: 1px;
@@ -223,7 +221,7 @@ st.markdown(
         margin: 1.5rem 0;
     }
 
-    /* ── Matrix table styling ─────────────────────────────────────── */
+    /*  Matrix table styling  */
     .stDataFrame {
         border-radius: 10px;
         overflow: hidden;
@@ -233,22 +231,18 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# ══════════════════════════════════════════════════════════════════════════════
 # Header
-# ══════════════════════════════════════════════════════════════════════════════
 st.markdown(
     """
     <div class="main-header">
         <h1>🔍 TF-IDF Search Engine</h1>
-        <p>Mesin Pencari Dokumen berbasis Term Frequency — Inverse Document Frequency</p>
+        <p>Mesin Pencari Dokumen berbasis Term Frequency - Inverse Document Frequency</p>
     </div>
     """,
     unsafe_allow_html=True,
 )
 
-# ══════════════════════════════════════════════════════════════════════════════
 # Session State Initialization
-# ══════════════════════════════════════════════════════════════════════════════
 if "loaded" not in st.session_state:
     st.session_state.loaded = False
 if "matrix_page" not in st.session_state:
@@ -256,9 +250,7 @@ if "matrix_page" not in st.session_state:
 if "matrix_tab_page" not in st.session_state:
     st.session_state.matrix_tab_page = 1
 
-# ══════════════════════════════════════════════════════════════════════════════
-# Sidebar — Configuration & Input
-# ══════════════════════════════════════════════════════════════════════════════
+# Sidebar - Configuration & Input
 with st.sidebar:
     st.markdown("## ⚙️ Konfigurasi")
     st.markdown("---")
@@ -283,9 +275,7 @@ with st.sidebar:
         st.success(f"✅ {len(st.session_state.raw_docs)} dokumen terindeks")
         st.info(f"📝 {len(st.session_state.tfidf_index.vocabulary)} unique terms")
 
-# ══════════════════════════════════════════════════════════════════════════════
 # Load & Process Dataset
-# ══════════════════════════════════════════════════════════════════════════════
 if btn_load:
     t_start = time.time()
 
@@ -344,11 +334,7 @@ if btn_load:
     time.sleep(0.5)
     st.rerun()
 
-
-# ══════════════════════════════════════════════════════════════════════════════
 # Helper Functions (defined before main content so they're available at runtime)
-# ══════════════════════════════════════════════════════════════════════════════
-
 def _generate_highlighted_snippet(
     raw_text: str,
     original_query: str,
@@ -458,17 +444,14 @@ def _render_paginated_matrix(
         height=420,
     )
 
-
-# ══════════════════════════════════════════════════════════════════════════════
 # Main Content (after loading)
-# ══════════════════════════════════════════════════════════════════════════════
 if st.session_state.loaded:
     raw_docs = st.session_state.raw_docs
     processed_docs = st.session_state.processed_docs
     tfidf_index: tfidf_engine.TFIDFIndex = st.session_state.tfidf_index
     process_time = st.session_state.process_time
 
-    # ─── Stat Cards ──────────────────────────────────────────────────────────
+    # Stat Cards
     col1, col2, col3, col4 = st.columns(4)
     with col1:
         st.markdown(
@@ -492,7 +475,7 @@ if st.session_state.loaded:
             unsafe_allow_html=True,
         )
 
-    # ─── Preprocessing Options Display ───────────────────────────────────────
+    # Preprocessing Options Display 
     opts = []
     if st.session_state.get("use_stopword", True):
         opts.append("✅ Stopword Removal")
@@ -506,7 +489,7 @@ if st.session_state.loaded:
 
     st.markdown('<hr class="custom-divider">', unsafe_allow_html=True)
 
-    # ─── Tabs: Search | TF-IDF Matrix | TF Matrix | IDF Values ──────────────
+    # Tabs: Search | TF-IDF Matrix | TF Matrix | IDF Values 
     tab_search, tab_tfidf, tab_tf, tab_idf = st.tabs([
         "🔍 Pencarian",
         "📊 Matriks TF-IDF",
@@ -514,9 +497,7 @@ if st.session_state.loaded:
         "📉 Nilai IDF",
     ])
 
-    # ═══════════════════════════════════════════════════════════════════════
     # TAB: Search Engine
-    # ═══════════════════════════════════════════════════════════════════════
     with tab_search:
         st.markdown(
             '<div class="section-header"><h2>Pencarian Dokumen</h2>'
@@ -597,9 +578,8 @@ if st.session_state.loaded:
                         unsafe_allow_html=True,
                     )
 
-    # ═══════════════════════════════════════════════════════════════════════
+    
     # TAB: TF-IDF Matrix
-    # ═══════════════════════════════════════════════════════════════════════
     with tab_tfidf:
         st.markdown(
             '<div class="section-header"><h2>Matriks TF-IDF</h2>'
@@ -610,9 +590,8 @@ if st.session_state.loaded:
 
         _render_paginated_matrix(tfidf_index, matrix_type="tfidf", key_prefix="tfidf")
 
-    # ═══════════════════════════════════════════════════════════════════════
+    
     # TAB: TF Matrix
-    # ═══════════════════════════════════════════════════════════════════════
     with tab_tf:
         st.markdown(
             '<div class="section-header"><h2>Matriks Term Frequency (TF)</h2>'
@@ -623,9 +602,8 @@ if st.session_state.loaded:
 
         _render_paginated_matrix(tfidf_index, matrix_type="tf", key_prefix="tf")
 
-    # ═══════════════════════════════════════════════════════════════════════
+    
     # TAB: IDF Values
-    # ═══════════════════════════════════════════════════════════════════════
     with tab_idf:
         st.markdown(
             '<div class="section-header"><h2>Nilai Inverse Document Frequency (IDF)</h2>'
@@ -658,7 +636,7 @@ if st.session_state.loaded:
         st.caption(f"Total terms: {len(idf_df)}")
 
 else:
-    # ─── Welcome Screen ─────────────────────────────────────────────────────
+    #  Welcome Screen 
     st.markdown(
         """
         <div style="
